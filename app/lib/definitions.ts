@@ -5,6 +5,13 @@ export type TestData = {
   releasedate: string;
 };
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+};
+
 export type Game = {
   id: string;
   name: string;
