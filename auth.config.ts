@@ -7,8 +7,12 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+
       const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      if (isOnDashboard) {
+      const isOnRegister = nextUrl.pathname.startsWith('/register');
+      if (isOnRegister) {
+        return true;
+      } else if (isOnDashboard) {
         if (isLoggedIn) {
           return true;
         }
@@ -18,12 +22,12 @@ export const authConfig = {
       }
       return true;
     },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub as string;
-      }
-      return session;
-    },
+    //session({ session, token }) {
+    //  if (session.user) {
+    //    session.user.id = token.sub as string;
+    //  }
+    //  return session;
+    //},
   },
   providers: [], // Add providers with an empty array for now
 } satisfies NextAuthConfig;

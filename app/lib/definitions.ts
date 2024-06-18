@@ -5,11 +5,11 @@ export type TestData = {
   releasedate: string;
 };
 
-export type User = {
+export type UserTable = {
   id: string;
-  name: string;
+  user_name: string;
   email: string;
-  password: string;
+  created_date: string;
 };
 
 export type Game = {

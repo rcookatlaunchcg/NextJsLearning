@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Speedrun tracking",
-    default: "Speedrun tracking"
+    template: "%s | Speedrun Tracking",
+    default: "Speedrun Tracking"
   },
   description: "Next.js website for tracking speedruns",
 };

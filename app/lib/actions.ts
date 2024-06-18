@@ -4,31 +4,11 @@ import { z } from 'zod';
 import pool from './db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn, signOut } from '@/auth';
+import { auth, signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
+import { UserTable } from './definitions';
 
-export async function authenticateCreds(
-  prevState: string | undefined,
-  formData: FormData,
-) {
-  try {
-    await signIn('credentials', formData);
-  } catch (error) {
-    console.log("ERROR ERROR ERROR");
-    console.log(error);
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.';
-        default:
-          return 'Something went wrong.';
-      }
-    }
-    throw error;
-  }
-}
-
-export async function authenticateOAuth(
+export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
 ) {
@@ -45,6 +25,71 @@ export async function authenticateOAuth(
       }
     }
     throw error;
+  }
+}
+
+const RegistrationFormSchema = z.object({
+  userName: z
+    .string({ required_error: 'Please enter a user name.' })
+    .min(1, { message: 'Please enter a user name.' }),
+})
+
+const CreateUser = RegistrationFormSchema;
+
+export async function validateUserName(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  // Validate form using Zod
+  const validatedFields = CreateUser.safeParse({
+    userName: formData.get('userName'),
+  });
+
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Game.',
+    };
+  }
+
+  // Prepare data 
+  const { userName } = validatedFields.data;
+  const date = new Date().toISOString().split('T')[0];
+
+  try {
+    // Check if username exists in the DB, return error if it does
+    const data = await pool.query<UserTable>(`
+      SELECT id
+      FROM users
+      WHERE user_name = $1`, [userName]);
+
+    const foundUser = data.rows.map((user: UserTable) => ({
+      ...user
+    }));
+
+    if (foundUser[0]) {
+      return {
+        errors: {
+          userName:[ "User name already exists" ]
+        }
+      }
+    }
+
+    await pool.query(`
+      INSERT INTO users (user_name, email, created_date)
+      VALUES ($1, $2, $3)
+    `, [userName, userName, date]);
+  } catch (error) {
+    // If a database error occurs, return a more specific error.
+    return { message: 'Error registering account.' };
+  }
+  
+  const session = await auth();
+
+  //redirect to the sign in page
+  if (session?.user) {
+    redirect("/dashboard");
   }
 }
 

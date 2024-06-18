@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS games (
 
 CREATE TABLE IF NOT EXISTS users (
 	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-	name VARCHAR(255) NOT NULL,
+	user_name VARCHAR(255) NOT NULL UNIQUE,
 	email TEXT NOT NULL UNIQUE,
-	password TEXT NOT NULL
+	created_date DATE NOT NULL
 );

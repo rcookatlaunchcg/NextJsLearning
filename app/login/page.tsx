@@ -1,6 +1,8 @@
 import LoginForm from '@/app/ui/login/login-form';
- 
-export default function LoginPage() {
+import Link from 'next/link';
+import { Button } from '@/app/ui/button'; 
+
+export default function Page() {
   return (
     <main className="flex items-center justify-center md:h-screen">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
@@ -9,6 +11,11 @@ export default function LoginPage() {
           </div>
         </div>
         <LoginForm />
+        <Link href="register">
+          <Button>
+            Sign Up
+          </Button>
+        </Link>
       </div>
     </main>
   );
