@@ -4,7 +4,7 @@ import Table from '@/app/ui/games/table';
 import { CreateGame } from '@/app/ui/games/buttons';
 import { Suspense } from 'react';
 import { TableSkeleton } from '@/app/ui/games/skeletons';
-import { fetchGamesPages } from '@/app/lib/data';
+import { fetchGamesPages } from '@/app/lib/games/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

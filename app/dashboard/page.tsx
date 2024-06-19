@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import {auth } from '@/auth'
-import { redirect } from 'next/navigation'
+//import {auth } from '@/auth'
+//import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Dashboard',

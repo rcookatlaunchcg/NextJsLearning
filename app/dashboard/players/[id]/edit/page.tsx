@@ -1,6 +1,6 @@
-import Form from '@/app/ui/games/edit-form';
+import Form from '@/app/ui/players/edit-form'
 import Breadcrumbs from '@/app/ui/breadcrumbs';
-import { fetchGameById } from '@/app/lib/games/data';
+import { fetchPlayerById } from '@/app/lib/players/data'
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
 
-  const game = await fetchGameById(id);
+  const player = await fetchPlayerById(id);
 
-  if (!game) {
+  if (!player) {
     notFound();
   }
 
@@ -21,15 +21,15 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Games', href: '/dashboard/games' },
+          { label: 'Players', href: '/dashboard/players' },
           {
-            label: 'Edit Game',
-            href: `/dashboard/games/${id}/edit`,
+            label: 'Edit Player',
+            href: `/dashboard/players/${id}/edit`,
             active: true,
           },
         ]}
       />
-      <Form game={game} />
+      <Form player={player} />
     </main>
   );
 }

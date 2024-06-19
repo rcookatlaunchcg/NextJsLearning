@@ -33,3 +33,25 @@ export type GameForm = {
   platform: string;
 };
   
+export type Player = {
+  id: string;
+  user_name: string;
+  email: string;
+  created_date: string;
+  modified_date: string;
+};
+
+export type PlayerTable = {
+  id: string;
+  user_name: string;
+  email: string;
+  created_date: string;
+};
+
+export type PlayerForm = {
+  id: string;
+  user_name: string;
+  email: string;
+  created_date: string;
+  modified_date: string;
+};

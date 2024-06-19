@@ -1,5 +1,5 @@
-import pool from './db';
-import { GameTable, GameForm } from './definitions';
+import pool from '@/app/lib/db';
+import { GameTable, GameForm } from '@/app/lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 6;

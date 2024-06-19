@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { createGame } from '@/app/lib/actions';
+import { createGame } from '@/app/lib/games/actions';
 import { useFormState } from 'react-dom';
 
 export default function Form() {
@@ -51,7 +51,6 @@ export default function Form() {
                 id="releaseYear"
                 name="releaseYear"
                 type="number"
-                min="1900"
                 step="1"
                 placeholder="Enter release year"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"

@@ -17,3 +17,11 @@ CREATE TABLE IF NOT EXISTS users (
 	email TEXT NOT NULL UNIQUE,
 	password TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS players (
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	user_name VARCHAR(255) NOT NULL,
+	email TEXT NOT NULL,
+	created_date DATE NOT NULL,
+	modified_date DATE NOT NULL
+);
