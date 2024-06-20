@@ -1,9 +1,44 @@
+import Pagination from '@/app/ui/pagination';
+import Search from '@/app/ui/search';
+import Table from '@/app/ui/runs/table'
+import { CreateRun } from '@/app/ui/runs/buttons'
+import { Suspense } from 'react';
+import { TableSkeleton } from '@/app/ui/runs/skeletons'
+import { fetchRunsPages } from '@/app/lib/runs/data'
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Runs',
 };
 
-export default function Page() {
-  return <p>Runs Page</p>;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+
+  const totalPages = await fetchRunsPages(query);
+
+  return (
+    <div className="w-full">
+      <div className="flex w-full items-center justify-between">
+        <h1 className={`text-2xl`}>Runs</h1>
+      </div>
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <Search placeholder="Search runs..." />
+        <CreateRun />
+      </div>
+      <Suspense key={query + currentPage} fallback={<TableSkeleton />}>
+        <Table query={query} currentPage={currentPage} />
+      </Suspense>
+      <div className="mt-5 flex w-full justify-center">
+        <Pagination totalPages={totalPages} />
+      </div>
+    </div>
+  );
 }

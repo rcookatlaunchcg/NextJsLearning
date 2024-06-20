@@ -64,38 +64,38 @@ export async function createPlayer(prevState: State, formData: FormData) {
 }
 
 export async function updatePlayer(id: string, prevState: State, formData: FormData) {
-    // Validate form using Zod
-    const validatedFields = UpdatePlayer.safeParse({
-      userName: formData.get('userName'),
-      email: formData.get('email'),
-    });
+  // Validate form using Zod
+  const validatedFields = UpdatePlayer.safeParse({
+    userName: formData.get('userName'),
+    email: formData.get('email'),
+  });
 
-    // If form validation fails, return errors early. Otherwise, continue.
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-        message: 'Missing Fields. Failed to Update Player.',
-      };
-    }
-     
-    // Prepare data for insertion into the database
-    const { userName, email } = validatedFields.data;
-    const date = new Date().toISOString().split('T')[0];
-
-    try {
-      await pool.query(`
-        UPDATE players
-        SET user_name = $1, email = $2, modified_date = $3
-        WHERE id = $4
-      `, [userName, email, date, id]);
-    } catch (error) {
-      console.log(error);
-      return { message: 'Database Error: Failed to Update Player.' };
-    }
-     
-    revalidatePath('/dashboard/players');
-    redirect('/dashboard/players');
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Player.',
+    };
   }
+    
+  // Prepare data for insertion into the database
+  const { userName, email } = validatedFields.data;
+  const date = new Date().toISOString().split('T')[0];
+
+  try {
+    await pool.query(`
+      UPDATE players
+      SET user_name = $1, email = $2, modified_date = $3
+      WHERE id = $4
+    `, [userName, email, date, id]);
+  } catch (error) {
+    console.log(error);
+    return { message: 'Database Error: Failed to Update Player.' };
+  }
+    
+  revalidatePath('/dashboard/players');
+  redirect('/dashboard/players');
+}
 
 export async function deletePlayer(id: string) {
   try {

@@ -25,3 +25,14 @@ CREATE TABLE IF NOT EXISTS players (
 	created_date DATE NOT NULL,
 	modified_date DATE NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS runs (
+	id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+	player_id UUID REFERENCES players(id),
+	game_id UUID REFERENCES games(id),
+	duration TEXT NOT NULL,
+	video_link TEXT,
+	run_date DATE NOT NULL,
+	created_date DATE NOT NULL,
+	modified_date DATE NOT NULL
+);

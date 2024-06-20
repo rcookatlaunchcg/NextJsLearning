@@ -1,5 +1,5 @@
 import pool from '@/app/lib/db';
-import { PlayerTable, PlayerForm } from '@/app/lib/definitions';
+import { PlayerTable, PlayerForm, PlayerField } from '@/app/lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 6;
@@ -54,25 +54,44 @@ export async function fetchPlayersPages(query: string) {
 }
 
 export async function fetchPlayerById(id: string) {
-    noStore();
-    try {
-      const data = await pool.query<PlayerForm>(`
-        SELECT
-          id,
-          user_name,
-          email,
-          created_date
-        FROM players
-        WHERE id = $1
-      `, [id]);
-  
-      const player = data.rows.map((player: PlayerForm) => ({
-        ...player
-      }));
-  
-      return player[0];
-    } catch (error) {
-      console.error('Database Error:', error);
-      throw new Error('Failed to fetch player.');
-    }
+  noStore();
+  try {
+    const data = await pool.query<PlayerForm>(`
+      SELECT
+        id,
+        user_name,
+        email,
+        created_date
+      FROM players
+      WHERE id = $1
+    `, [id]);
+
+    const player = data.rows.map((player: PlayerForm) => ({
+      ...player
+    }));
+
+    return player[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch player.');
   }
+}
+
+export async function fetchPlayers() {
+  noStore();
+  try {
+    const data = await pool.query<PlayerField>(`
+      SELECT
+        id,
+        user_name
+      FROM players
+      ORDER BY user_name ASC
+    `);
+
+    const games = data.rows;
+    return games;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all games.');
+  }
+}

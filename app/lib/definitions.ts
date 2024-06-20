@@ -32,6 +32,11 @@ export type GameForm = {
   release_year: number;
   platform: string;
 };
+
+export type GameField = {
+  id: string;
+  name: string;
+}
   
 export type Player = {
   id: string;
@@ -54,4 +59,40 @@ export type PlayerForm = {
   email: string;
   created_date: string;
   modified_date: string;
+};
+
+export type PlayerField = {
+  id: string;
+  user_name: string;
+};
+
+export type Runs = {
+  id: string;
+  player_id: string;
+  game_id: string;
+  duration: string;
+  video_link: string;
+  run_date: string;
+  created_date: string;
+  modified_date: string;
+};
+
+export type RunTable = {
+  id: string;
+  player_id: string;
+  game_id: string;
+  duration: string;
+  video_link: string;
+  run_date: string;
+  game_name: string;
+  player_name: string;
+};
+
+export type RunForm = {
+  id: string;
+  player_id: string;
+  game_id: string;
+  duration: string;
+  video_link: string;
+  run_date: string;
 };
