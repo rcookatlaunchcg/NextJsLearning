@@ -1,6 +1,7 @@
 import { UpdateGame, DeleteGame } from '@/app/ui/games/buttons';
 import { fetchFilteredGames } from '@/app/lib/games/data';
 import { GameTable } from '@/app/lib/definitions';
+import Link from 'next/link';
 
 export default async function GamesTable({
   query,
@@ -25,7 +26,12 @@ export default async function GamesTable({
                   <div>
                     <div className="mb-2 flex items-center">
                       <div className="grid grid-cols-2 gap 6">
-                        <p>{game.name}</p>
+                        <Link
+                          href={`/dashboard/games/${game.id}/view`}
+                          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                        >
+                          {game.name}
+                        </Link>
                       </div>
                     </div>
                     <p className="text-sm text-gray-500">{game.release_year}</p>
@@ -67,7 +73,12 @@ export default async function GamesTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <p>{game.name}</p>
+                      <Link
+                        href={`/dashboard/games/${game.id}/view`}
+                        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                      >
+                        {game.name}
+                      </Link>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">

@@ -97,6 +97,7 @@ export async function updatePlayer(id: string, prevState: State, formData: FormD
   redirect('/dashboard/players');
 }
 
+// todo: deleting a player needs to delete all associated runs
 export async function deletePlayer(id: string) {
   try {
     await pool.query(`DELETE FROM players WHERE id = $1`, [id]);

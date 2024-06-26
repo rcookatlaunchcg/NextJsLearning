@@ -96,3 +96,7 @@ export type RunForm = {
   video_link: string;
   run_date: string;
 };
+
+export type LeaderboardTable = {
+
+};

@@ -66,38 +66,39 @@ export async function createGame(prevState: State, formData: FormData) {
 }
 
 export async function updateGame(id: string, prevState: State, formData: FormData) {
-    // Validate form using Zod
-    const validatedFields = UpdateGame.safeParse({
-      name: formData.get('gameName'),
-      releaseYear: formData.get('releaseYear'),
-      platform: formData.get('platform'),
-    });
+  // Validate form using Zod
+  const validatedFields = UpdateGame.safeParse({
+    name: formData.get('gameName'),
+    releaseYear: formData.get('releaseYear'),
+    platform: formData.get('platform'),
+  });
 
-    // If form validation fails, return errors early. Otherwise, continue.
-    if (!validatedFields.success) {
-      return {
-        errors: validatedFields.error.flatten().fieldErrors,
-        message: 'Missing Fields. Failed to Update Game.',
-      };
-    }
-     
-    // Prepare data for insertion into the database
-    const { name, releaseYear, platform } = validatedFields.data;
-
-    try {
-      await pool.query(`
-        UPDATE games
-        SET name = $1, release_year = $2, platform = $3
-        WHERE id = $4
-      `, [name, releaseYear, platform, id]);
-    } catch (error) {
-      return { message: 'Database Error: Failed to Update Game.' };
-    }
-     
-    revalidatePath('/dashboard/games');
-    redirect('/dashboard/games');
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Game.',
+    };
   }
+    
+  // Prepare data for insertion into the database
+  const { name, releaseYear, platform } = validatedFields.data;
 
+  try {
+    await pool.query(`
+      UPDATE games
+      SET name = $1, release_year = $2, platform = $3
+      WHERE id = $4
+    `, [name, releaseYear, platform, id]);
+  } catch (error) {
+    return { message: 'Database Error: Failed to Update Game.' };
+  }
+    
+  revalidatePath('/dashboard/games');
+  redirect('/dashboard/games');
+}
+
+// todo: deleting a game needs to delete all associated runs
 export async function deleteGame(id: string) {
   try {
     await pool.query(`DELETE FROM games WHERE id = $1`, [id]);

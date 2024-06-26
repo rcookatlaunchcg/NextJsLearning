@@ -1,5 +1,5 @@
 import pool from '@/app/lib/db';
-import { GameTable, GameForm, GameField } from '@/app/lib/definitions';
+import { GameTable, GameForm, GameField, LeaderboardTable } from '@/app/lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 6;
@@ -90,8 +90,34 @@ export async function fetchGames() {
 
     const games = data.rows;
     return games;
-  } catch (err) {
-    console.error('Database Error:', err);
+  } catch (error) {
+    console.error('Database Error:', error);
     throw new Error('Failed to fetch all games.');
+  }
+}
+
+export async function fetchGameLeaderboard(gameId: string) {
+  noStore();
+
+  try {
+    const data = await pool.query<LeaderboardTable>(`
+      SELECT
+        r.id,
+        r.player_id,
+        r.duration,
+        r.video_link,
+        r.run_date,
+        p.user_name AS player_name
+      FROM runs r
+        INNER JOIN players p ON r.player_id = p.id
+      WHERE r.game_id = 'b6d5bf79-9e2b-44c6-a2ce-ffba8eda8570'
+      ORDER BY r.duration ASC
+    `);
+
+    const runs = data.rows;
+    return runs;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch leaderboard data.');
   }
 }

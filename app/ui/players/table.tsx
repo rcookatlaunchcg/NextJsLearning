@@ -2,6 +2,7 @@ import { UpdatePlayer, DeletePlayer } from '@/app/ui/players/buttons';
 import { fetchFilteredPlayers } from '@/app/lib/players/data'
 import { PlayerTable } from '@/app/lib/definitions';
 import { formatDateToLocal } from '@/app/lib/utils';
+import Link from 'next/link';
 
 export default async function PlayersTable({
   query,
@@ -26,7 +27,12 @@ export default async function PlayersTable({
                   <div>
                     <div className="mb-2 flex items-center">
                       <div className="grid grid-cols-2 gap 6">
-                        <p>{player.user_name}</p>
+                        <Link
+                          href={`/dashboard/players/${player.id}/view`}
+                          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                        >
+                          {player.user_name}
+                        </Link>
                       </div>
                     </div>
                     <p className="text-sm text-gray-500">{formatDateToLocal(player.created_date)}</p>
@@ -68,7 +74,12 @@ export default async function PlayersTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <p>{player.user_name}</p>
+                      <Link
+                        href={`/dashboard/players/${player.id}/view`}
+                        className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+                      >
+                        {player.user_name}
+                      </Link>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
