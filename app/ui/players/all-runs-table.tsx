@@ -1,24 +1,21 @@
-import { UpdateRun, DeleteRun } from '@/app/ui/runs/buttons';
-import { fetchFilteredRuns } from '@/app/lib/runs/data';
-import { RunTable } from '@/app/lib/definitions';
-import { formatDateToLocal } from '@/app/lib/utils';
+import { fetchAllRuns } from '@/app/lib/players/data';
+import { AllRunsTable } from '@/app/lib/definitions';
 import Link from 'next/link';
+import { formatDateToLocal } from '@/app/lib/utils';
 
-export default async function RunsTable({
-  query,
-  currentPage,
+export default async function Table({
+  playerId
 }: {
-  query: string;
-  currentPage: number;
+  playerId: string;
 }) {
-  const runs = await fetchFilteredRuns(query, currentPage);
+  const runs = await fetchAllRuns(playerId);
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {runs?.map((run: RunTable) => (
+            {runs?.map((run: AllRunsTable) => (
               <div
                 key={run.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -28,33 +25,23 @@ export default async function RunsTable({
                     <div className="mb-2 flex items-center">
                       <div className="grid grid-cols-2 gap 6">
                         <Link
-                          href={`/dashboard/players/${run.player_id}/view`}
+                          href={`/dashboard/players/${run.game_id}/view`}
                           className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                         >
-                          {run.player_name}
+                          {run.game_name}
                         </Link>
                       </div>
                     </div>
-                    <Link
-                      href={`/dashboard/games/${run.game_id}/view`}
-                      className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                    >
-                      {run.game_name}
-                    </Link>
+                    <p className="text-sm text-gray-500">{run.duration}</p>
                   </div>
                   <div>
                     <div className="mb-2 flex items-center">
                       <div className="grid grid-cols-2 gap 6">
-                        <Link
-                          href={`/dashboard/runs/${run.id}/view`}
-                          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                        >
-                          {run.duration}
-                        </Link>
+                        <p className="text-sm text-gray-500">{formatDateToLocal(run.run_date)}</p>
                       </div>
                     </div>
+                    <p className="text-sm text-gray-500">{run.platform}</p>
                   </div>
-                  <p className="text-sm text-gray-500">{formatDateToLocal(run.run_date)}</p>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <Link
@@ -63,10 +50,6 @@ export default async function RunsTable({
                   >
                     {run.video_link}
                   </Link>
-                  <div className="flex justify-end gap-2">
-                    <UpdateRun id={run.id} />
-                    <DeleteRun id={run.id} />
-                  </div>
                 </div>
               </div>
             ))}
@@ -75,27 +58,24 @@ export default async function RunsTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Player Name
+                  Game
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Game Name
+                  Platform
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Run Duration
+                  Time
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
+                  Date
+                </th>
+                <th scope="col" className="px-3 py-3 pl-6 pr-3 font-medium">
                   Link
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Run Date
-                </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
-                  <span className="sr-only">Edit</span>
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              {runs?.map((run: RunTable) => (
+              {runs?.map((run: AllRunsTable) => (
                 <tr
                   key={run.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -103,45 +83,29 @@ export default async function RunsTable({
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <Link
-                        href={`/dashboard/players/${run.player_id}/view`}
+                        href={`/dashboard/games/${run.game_id}/view`}
                         className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                       >
-                        {run.player_name}
+                        {run.game_name}
                       </Link>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <Link
-                      href={`/dashboard/games/${run.game_id}/view`}
-                      className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                    >
-                      {run.game_name}
-                    </Link>
+                    <p>{run.platform}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <Link
-                      href={`/dashboard/runs/${run.id}/view`}
-                      className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-                    >
-                      {run.duration}
-                    </Link>
+                    <p>{run.duration}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
+                    <p>{formatDateToLocal(run.run_date)}</p>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3 pl-6 pr-3">
                     <Link
                       href={run.video_link}
                       className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
                     >
                       {run.video_link}
                     </Link>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    <p>{formatDateToLocal(run.run_date)}</p>
-                  </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      <UpdateRun id={run.id} />
-                      <DeleteRun id={run.id} />
-                    </div>
                   </td>
                 </tr>
               ))}

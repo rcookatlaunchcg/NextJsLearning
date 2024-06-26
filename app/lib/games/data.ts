@@ -110,9 +110,9 @@ export async function fetchGameLeaderboard(gameId: string) {
         p.user_name AS player_name
       FROM runs r
         INNER JOIN players p ON r.player_id = p.id
-      WHERE r.game_id = 'b6d5bf79-9e2b-44c6-a2ce-ffba8eda8570'
+      WHERE r.game_id = $1
       ORDER BY r.duration ASC
-    `);
+    `, [gameId]);
 
     const runs = data.rows;
     return runs;

@@ -98,5 +98,20 @@ export type RunForm = {
 };
 
 export type LeaderboardTable = {
+  id: string;
+  player_id: string;
+  duration: string;
+  video_link: string;
+  run_date: string;
+  player_name: string;
+};
 
+export type AllRunsTable = {
+  id: string;
+  game_id: string;
+  duration: string;
+  video_link: string;
+  run_date: string;
+  game_name: string;
+  platform: string;
 };

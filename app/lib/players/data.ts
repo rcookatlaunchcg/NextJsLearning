@@ -1,5 +1,5 @@
 import pool from '@/app/lib/db';
-import { PlayerTable, PlayerForm, PlayerField } from '@/app/lib/definitions';
+import { PlayerTable, PlayerForm, PlayerField, AllRunsTable } from '@/app/lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 6;
@@ -93,5 +93,32 @@ export async function fetchPlayers() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all games.');
+  }
+}
+
+export async function fetchAllRuns(playerId: string) {
+  noStore();
+
+  try {
+    const data = await pool.query<AllRunsTable>(`
+      SELECT
+        r.id,
+        r.game_id,
+        r.duration,
+        r.video_link,
+        r.run_date,
+        g.name AS game_name,
+        g.platform
+      FROM runs r
+        INNER JOIN games g ON r.game_id = g.id
+      WHERE r.player_id = $1
+      ORDER BY run_date DESC
+    `, [playerId]);
+
+    const runs = data.rows;
+    return runs;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch all run data.');
   }
 }
